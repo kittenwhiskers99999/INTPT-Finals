@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox – SpotIfind</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <a href="/" class="logo">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="logo">
+        SpotIfind
+    </a>
+    <nav class="nav-links">
+        <a href="/lost" class="tab">Lost Items</a>
+        <a href="/found" class="tab">Found Items</a>
+        <a href="/inbox" class="tab active">Inbox</a>
+        <a href="/about" class="tab">About</a>
+    </nav>
+    <div class="auth">
+        {% if session.get('username') %}
+            <a href="/logout" class="tab login">Logout</a>
+        {% else %}
+            <a href="/login" class="tab login">Login</a>
+        {% endif %}
+    </div>
+</header>
+
+<main class="container">
+    <div class="inbox-wrapper">
+
+        <div class="inbox-header">
+            <h1>Inbox</h1>
+            <p>All your conversations across your reports.</p>
+        </div>
+
+        {% if threads %}
+        <div class="inbox-list">
+            {% for thread in threads %}
+            <a href="{{ url_for('chat', item_type=thread.item_type, item_id=thread.item_id) }}?with={{ thread.other_user.id }}"
+               class="inbox-item {% if thread.unread_count > 0 %}inbox-unread{% endif %}">
+
+                <!-- Item thumbnail -->
+                <div class="inbox-thumb">
+                    {% if thread.item.image %}
+                    <img src="{{ url_for('static', filename='uploads/' + thread.item.image) }}" alt="{{ thread.item.type }}">
+                    {% else %}
+                    <div class="inbox-thumb-placeholder">?</div>
+                    {% endif %}
+                    <span class="inbox-badge {% if thread.item_type == 'lost' %}badge-lost{% else %}badge-found{% endif %}">
+                        {{ thread.item_type | capitalize }}
+                    </span>
+                </div>
+
+                <!-- Thread info -->
+                <div class="inbox-info">
+                    <div class="inbox-top">
+                        <span class="inbox-name">{{ thread.other_user.username }}</span>
+                        <span class="inbox-time">{{ thread.last_message_time.strftime('%b %d') }}</span>
+                    </div>
+                    <div class="inbox-bottom">
+                        <span class="inbox-item-type">{{ thread.item.type }}</span>
+                        <span class="inbox-preview">{{ thread.last_message[:50] }}{% if thread.last_message|length > 50 %}...{% endif %}</span>
+                    </div>
+                </div>
+
+                <!-- Unread badge -->
+                {% if thread.unread_count > 0 %}
+                <div class="inbox-unread-dot">{{ thread.unread_count }}</div>
+                {% endif %}
+
+            </a>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <div class="inbox-empty">
+            <p>&#128172; No conversations yet.</p>
+            <small>When someone contacts you about your report, it will appear here.</small>
+        </div>
+        {% endif %}
+
+    </div>
+</main>
+
+</body>
+</html>

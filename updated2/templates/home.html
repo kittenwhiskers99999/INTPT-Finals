@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpotIfind</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <a href="/" class="logo">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="logo">
+        SpotIfind
+    </a>
+    <nav class="nav-links">
+        <a href="/lost" class="tab {% if active == 'lost' %}active{% endif %}">Lost Items</a>
+        <a href="/found" class="tab {% if active == 'found' %}active{% endif %}">Found Items</a>
+        <a href="/inbox" class="tab">Inbox</a>
+        <a href="/about" class="tab">About</a>
+    </nav>
+    <div class="auth">
+        {% if session.get('username') %}
+            <a href="/logout" class="tab login">Logout</a>
+        {% else %}
+            <a href="/login" class="tab login">Login</a>
+        {% endif %}
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- LOST ITEMS FEED -->
+    <section id="lost" class="feed {% if active == 'lost' or active == 'all' %}active{% endif %}">
+        <div class="feed-header">
+            <h1>Lost Items</h1>
+            <a href="/report-lost" class="btn-report">+ Report Lost Item</a>
+        </div>
+        <div class="grid">
+            {% for item in lost_items %}
+            <div class="card">
+                {% if item.image %}
+                <img src="{{ url_for('static', filename='uploads/' + item.image) }}" class="card-img" alt="{{ item.type }}">
+                {% endif %}
+                <h2>{{ item.type }}</h2>
+                <p><strong>Color:</strong> {{ item.color }}</p>
+                <p><strong>Location:</strong> {{ item.location }}</p>
+                <small>{{ item.description }}</small>
+                {% if item.user_id == current_user_id %}
+                <div class="card-actions">
+                    <form method="post" action="/claim/lost_items/{{ item.id }}">
+                        <button type="submit" class="btn-claim">&#10003; Mark as Claimed</button>
+                    </form>
+                    <form method="post" action="/delete/lost_items/{{ item.id }}" onsubmit="return confirm('Delete this report?')">
+                        <button type="submit" class="btn-delete">&#128465; Delete</button>
+                    </form>
+                </div>
+                {% else %}
+                <div class="card-actions">
+                    <a href="/chat/lost/{{ item.id }}" class="btn-contact">&#128172; Contact Reporter</a>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <p class="empty-msg">No lost items reported yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- FOUND ITEMS FEED -->
+    <section id="found" class="feed {% if active == 'found' %}active{% endif %}">
+        <div class="feed-header">
+            <h1>Found Items</h1>
+            <a href="/report-found" class="btn-report">+ Report Found Item</a>
+        </div>
+        <div class="grid">
+            {% for item in found_items %}
+            <div class="card">
+                {% if item.image %}
+                <img src="{{ url_for('static', filename='uploads/' + item.image) }}" class="card-img" alt="{{ item.type }}">
+                {% endif %}
+                <h2>{{ item.type }}</h2>
+                <p><strong>Color:</strong> {{ item.color }}</p>
+                <p><strong>Location:</strong> {{ item.location }}</p>
+                <small>{{ item.description }}</small>
+                {% if item.user_id == current_user_id %}
+                <div class="card-actions">
+                    <form method="post" action="/claim/found_items/{{ item.id }}">
+                        <button type="submit" class="btn-claim">&#10003; Mark as Claimed</button>
+                    </form>
+                    <form method="post" action="/delete/found_items/{{ item.id }}" onsubmit="return confirm('Delete this report?')">
+                        <button type="submit" class="btn-delete">&#128465; Delete</button>
+                    </form>
+                </div>
+                {% else %}
+                <div class="card-actions">
+                    <a href="/chat/found/{{ item.id }}" class="btn-contact">&#128172; Contact Reporter</a>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <p class="empty-msg">No found items reported yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>
