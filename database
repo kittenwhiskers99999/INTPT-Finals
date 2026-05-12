@@ -62,4 +62,9 @@ CREATE TABLE IF NOT EXISTS messages (
     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
 );
- 
+
+ALTER TABLE lost_items ADD COLUMN status ENUM('active', 'claimed', 'deleted') DEFAULT 'active';
+ALTER TABLE found_items ADD COLUMN status ENUM('active', 'claimed', 'deleted') DEFAULT 'active';
+
+UPDATE lost_items SET status = 'active' WHERE status IS NULL;
+UPDATE found_items SET status = 'active' WHERE status IS NULL;
