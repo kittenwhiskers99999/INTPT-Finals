@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat – SpotIfind</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <a href="/" class="logo">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="logo">
+        SpotIfind
+    </a>
+    <nav class="nav-links">
+        <a href="/lost" class="tab">Lost Items</a>
+        <a href="/found" class="tab">Found Items</a>
+        <a href="/about" class="tab">About</a>
+    </nav>
+    <div class="auth">
+        {% if session.get('username') %}
+            <a href="/logout" class="tab login">Logout</a>
+        {% else %}
+            <a href="/login" class="tab login">Login</a>
+        {% endif %}
+    </div>
+</header>
+
+<main class="container">
+    <div class="chat-wrapper">
+
+        <!-- ITEM SUMMARY -->
+        <div class="chat-item-summary">
+            {% if item.image %}
+            <img src="{{ url_for('static', filename='uploads/' + item.image) }}" class="chat-item-img" alt="{{ item.type }}">
+            {% else %}
+            <div class="chat-item-img-placeholder">No Photo</div>
+            {% endif %}
+            <div class="chat-item-info">
+                <span class="chat-item-badge {% if item_type == 'lost' %}badge-lost{% else %}badge-found{% endif %}">
+                    {{ item_type | capitalize }}
+                </span>
+                <h2>{{ item.type }}</h2>
+                <p>{{ item.color }} &middot; {{ item.location }}</p>
+                <small>Posted by <strong>{{ item.reporter_name }}</strong></small>
+            </div>
+        </div>
+
+        <div class="chat-layout">
+
+            <!-- THREAD LIST (reporter only) -->
+            {% if is_reporter and threads %}
+            <div class="chat-threads">
+                <h3>Conversations</h3>
+                {% for thread in threads %}
+                <a href="{{ url_for('chat', item_type=item_type, item_id=item.id) }}?with={{ thread.id }}"
+                   class="thread-item {% if other_user and other_user.id == thread.id %}thread-active{% endif %}">
+                    <div class="thread-avatar">{{ thread.username[0] | upper }}</div>
+                    <span>{{ thread.username }}</span>
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- CHAT WINDOW -->
+            <div class="chat-main">
+                {% if other_user %}
+
+                <div class="chat-header">
+                    <div class="thread-avatar">{{ other_user.username[0] | upper }}</div>
+                    <span>{{ other_user.username }}</span>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    {% if messages %}
+                        {% for msg in messages %}
+                        <div class="chat-bubble {% if msg.sender_id == current_user.id %}bubble-mine{% else %}bubble-theirs{% endif %}">
+                            <p>{{ msg.message }}</p>
+                            <small>{{ msg.sent_at.strftime('%b %d, %I:%M %p') }}</small>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="chat-empty">No messages yet. Say hello!</p>
+                    {% endif %}
+                </div>
+
+                <form method="post" action="{{ url_for('send_message', item_type=item_type, item_id=item.id) }}" class="chat-form">
+                    <input type="hidden" name="receiver_id" value="{{ other_user.id }}">
+                    {% if is_reporter %}
+                    <input type="hidden" name="with_user_id" value="{{ other_user.id }}">
+                    {% endif %}
+                    <input type="text" name="message" placeholder="Type a message..." required autocomplete="off" class="chat-input">
+                    <button type="submit" class="chat-send">Send</button>
+                </form>
+
+                {% elif is_reporter %}
+                <div class="chat-empty-state">
+                    <p>Select a conversation from the left to view messages.</p>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<script>
+    // Auto scroll to bottom of chat
+    const chatBox = document.getElementById('chatMessages');
+    if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+</script>
+
+</body>
+</html>
