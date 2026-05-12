@@ -10,15 +10,15 @@
 
 <!-- NAVBAR -->
 <header class="navbar">
-    <a href="/" class="logo">SpotIfind</a>
-
+    <a href="/" class="logo">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="logo">
+        SpotIfind
+    </a>
     <nav class="nav-links">
-        <a href="/home" class="tab {% if active == 'homepage' %}active{% endif %}">Home</a>
         <a href="/lost" class="tab {% if active == 'lost' %}active{% endif %}">Lost Items</a>
         <a href="/found" class="tab {% if active == 'found' %}active{% endif %}">Found Items</a>
         <a href="/about" class="tab">About</a>
     </nav>
-
     <div class="auth">
         {% if session.get('username') %}
             <a href="/logout" class="tab login">Logout</a>
@@ -32,13 +32,19 @@
 
     <!-- LOST ITEMS FEED -->
     <section id="lost" class="feed {% if active == 'lost' or active == 'all' %}active{% endif %}">
-        <h1>Lost Items</h1>
+        <div class="feed-header">
+            <h1>Lost Items</h1>
+            <a href="/report-lost" class="btn-report">+ Report Lost Item</a>
+        </div>
         <div class="grid">
             {% for item in lost_items %}
             <div class="card">
-                <div class="emoji">{{ item.emoji }}</div>
-                <h2>{{ item.title }}</h2>
-                <p>{{ item.location }}</p>
+                {% if item.image %}
+                <img src="{{ url_for('static', filename='uploads/' + item.image) }}" class="card-img" alt="{{ item.type }}">
+                {% endif %}
+                <h2>{{ item.type }}</h2>
+                <p><strong>Color:</strong> {{ item.color }}</p>
+                <p><strong>Location:</strong> {{ item.location }}</p>
                 <small>{{ item.description }}</small>
             </div>
             {% else %}
@@ -49,13 +55,19 @@
 
     <!-- FOUND ITEMS FEED -->
     <section id="found" class="feed {% if active == 'found' %}active{% endif %}">
-        <h1>Found Items</h1>
+        <div class="feed-header">
+            <h1>Found Items</h1>
+            <a href="/report-found" class="btn-report">+ Report Found Item</a>
+        </div>
         <div class="grid">
             {% for item in found_items %}
             <div class="card">
-                <div class="emoji">{{ item.emoji }}</div>
-                <h2>{{ item.title }}</h2>
-                <p>{{ item.location }}</p>
+                {% if item.image %}
+                <img src="{{ url_for('static', filename='uploads/' + item.image) }}" class="card-img" alt="{{ item.type }}">
+                {% endif %}
+                <h2>{{ item.type }}</h2>
+                <p><strong>Color:</strong> {{ item.color }}</p>
+                <p><strong>Location:</strong> {{ item.location }}</p>
                 <small>{{ item.description }}</small>
             </div>
             {% else %}
