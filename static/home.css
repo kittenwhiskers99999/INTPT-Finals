@@ -29,10 +29,20 @@ body {
 }
 
 .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-size: 22px;
     font-weight: 800;
     color: white;
     text-decoration: none;
+}
+
+.logo img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 6px;
 }
 
 .nav-links {
@@ -211,4 +221,205 @@ body {
     .container {
         padding: 20px;
     }
+}
+
+
+/* =========================
+   REPORT FORM
+========================= */
+.report-wrapper {
+    max-width: 640px;
+    margin: 40px auto;
+}
+
+.report-header {
+    margin-bottom: 28px;
+}
+
+.report-header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1e3a8a;
+}
+
+.report-header p {
+    margin-top: 6px;
+    font-size: 15px;
+    color: #6b7280;
+}
+
+.report-form {
+    background: white;
+    border-radius: 14px;
+    padding: 32px;
+    box-shadow: 0 4px 16px rgba(37,99,235,0.08);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 8px;
+    border: 1.5px solid #d1d5db;
+    font-size: 14px;
+    font-family: inherit;
+    color: #1c1e21;
+    background: #fafafa;
+    transition: border-color 0.2s;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    background: white;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #aaa;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.btn-submit {
+    flex: 1;
+    padding: 12px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.btn-submit:hover {
+    background: #1d4ed8;
+}
+
+.btn-cancel {
+    padding: 12px 24px;
+    background: #f3f4f6;
+    color: #374151;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #e5e7eb;
+}
+
+.alert-success {
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    color: #166534;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.alert-success a {
+    margin-left: 12px;
+    color: #2563eb;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.alert-error {
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    color: #dc2626;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Report button on feed */
+.feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.btn-report {
+    background: #2563eb;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.btn-report:hover {
+    background: #1d4ed8;
+}
+
+/* =========================
+   CARD IMAGE
+========================= */
+.card-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 14px;
+}
+
+/* FILE INPUT */
+.file-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1.5px dashed #d1d5db;
+    background: #fafafa;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.file-input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.file-hint {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.optional {
+    font-weight: 400;
+    color: #9ca3af;
+    font-size: 12px;
 }
